@@ -30,10 +30,12 @@ export const useTimer = (settings?: PauseSettings) => {
     setTimerState(prev => ({ ...prev, isRunning: true }));
     triggerHapticImpact('medium');
 
-    // Programmer la notification de pause
+    // Programmer la notification appropriée selon la phase actuelle
     if (timerState.currentPhase === 'work') {
+      // En phase de travail, programmer une notification de pause
       await scheduleBreakNotification(timerState.timeRemaining);
     } else {
+      // En phase de pause, programmer une notification de travail
       await scheduleWorkNotification(timerState.timeRemaining);
     }
 

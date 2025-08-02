@@ -30,8 +30,8 @@ export const requestNotificationPermissions = async () => {
 export const scheduleBreakNotification = async (timeInSeconds: number) => {
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: '⏰ Pause !',
-      body: 'Il est temps de prendre une pause pour votre bien-être !',
+      title: '💼 Retour au travail !',
+      body: 'Votre pause est terminée. Il est temps de reprendre le travail avec énergie !',
       data: { type: 'break' },
     },
     trigger: {
@@ -43,8 +43,8 @@ export const scheduleBreakNotification = async (timeInSeconds: number) => {
 export const scheduleWorkNotification = async (timeInSeconds: number) => {
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: '🚀 Retour au travail !',
-      body: 'Votre pause est terminée, reprenons le travail !',
+      title: '☕ Pause bienvenue !',
+      body: 'Votre session de travail est terminée. Prenez une pause pour vous détendre et vous ressourcer !',
       data: { type: 'work' },
     },
     trigger: {

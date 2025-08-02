@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StatusBar,
+  TextInput,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme, shadows } from '../utils/theme';
@@ -27,6 +28,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 }) => {
   const [selectedDuration, setSelectedDuration] = useState(currentSettings.duration);
   const [selectedFrequency, setSelectedFrequency] = useState(currentSettings.frequency);
+  const [customDuration, setCustomDuration] = useState('');
+  const [customFrequency, setCustomFrequency] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
 
   const handleSave = () => {
@@ -47,7 +50,29 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const handleReset = () => {
     setSelectedDuration(10);
     setSelectedFrequency(60);
+    setCustomDuration('');
+    setCustomFrequency('');
     setErrors([]);
+  };
+
+  const handleCustomDurationChange = (text: string) => {
+    const value = parseInt(text);
+    if (!isNaN(value) && value > 0 && value <= 60) {
+      setSelectedDuration(value);
+      setCustomDuration(text);
+    } else {
+      setCustomDuration(text);
+    }
+  };
+
+  const handleCustomFrequencyChange = (text: string) => {
+    const value = parseInt(text);
+    if (!isNaN(value) && value > 0 && value <= 240) {
+      setSelectedFrequency(value);
+      setCustomFrequency(text);
+    } else {
+      setCustomFrequency(text);
+    }
   };
 
   return (
@@ -63,9 +88,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         >
           <Text style={styles.backButtonText}>← Retour</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Paramètres</Text>
-        <View style={styles.placeholder} />
       </View>
+      
+      <Text style={styles.headerTitle}>Paramètres</Text>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Durée de pause */}
@@ -97,6 +122,23 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               </TouchableOpacity>
             ))}
           </View>
+
+          {/* Saisie personnalisée pour la durée */}
+          <View style={styles.customInputContainer}>
+            <Text style={styles.customInputLabel}>Ou saisissez votre durée :</Text>
+            <View style={styles.inputRow}>
+              <TextInput
+                style={styles.customInput}
+                value={customDuration}
+                onChangeText={handleCustomDurationChange}
+                placeholder="Durée en minutes"
+                placeholderTextColor={theme.textSecondary}
+                keyboardType="numeric"
+                maxLength={3}
+              />
+              <Text style={styles.inputUnit}>minutes</Text>
+            </View>
+          </View>
         </View>
 
         {/* Fréquence de travail */}
@@ -127,6 +169,23 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 </Text>
               </TouchableOpacity>
             ))}
+          </View>
+
+          {/* Saisie personnalisée pour la fréquence */}
+          <View style={styles.customInputContainer}>
+            <Text style={styles.customInputLabel}>Ou saisissez votre fréquence :</Text>
+            <View style={styles.inputRow}>
+              <TextInput
+                style={styles.customInput}
+                value={customFrequency}
+                onChangeText={handleCustomFrequencyChange}
+                placeholder="Fréquence en minutes"
+                placeholderTextColor={theme.textSecondary}
+                keyboardType="numeric"
+                maxLength={3}
+              />
+              <Text style={styles.inputUnit}>minutes</Text>
+            </View>
           </View>
         </View>
 
@@ -186,7 +245,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             activeOpacity={0.8}
           >
             <View style={[styles.buttonGradient, { backgroundColor: theme.primary }]}>
-              <Text style={styles.saveButtonText}>💾 Sauvegarder</Text>
+              <Text style={styles.saveButtonText} numberOfLines={1}>💾 Sauvegarder</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -200,12 +259,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 50,
-    paddingBottom: 20,
+    paddingBottom: 10,
   },
   backButton: {
     paddingVertical: 8,
@@ -219,9 +275,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: theme.text,
-  },
-  placeholder: {
-    width: 60,
+    textAlign: 'center',
+    marginBottom: 20,
   },
   content: {
     flex: 1,
@@ -245,6 +300,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
+    marginBottom: 16,
   },
   option: {
     backgroundColor: theme.surface,
@@ -266,6 +322,35 @@ const styles = StyleSheet.create({
   },
   selectedOptionText: {
     color: theme.primary,
+  },
+  customInputContainer: {
+    marginTop: 16,
+  },
+  customInputLabel: {
+    fontSize: 14,
+    color: theme.textSecondary,
+    marginBottom: 8,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  customInput: {
+    backgroundColor: theme.surface,
+    borderWidth: 1,
+    borderColor: theme.textSecondary + '30',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 16,
+    color: theme.text,
+    flex: 1,
+    ...shadows.small,
+  },
+  inputUnit: {
+    fontSize: 14,
+    color: theme.textSecondary,
   },
   errorContainer: {
     backgroundColor: theme.error + '20',
