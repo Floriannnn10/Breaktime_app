@@ -55,23 +55,29 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     setErrors([]);
   };
 
+  const handleDurationOptionPress = (duration: number) => {
+    setSelectedDuration(duration);
+    setCustomDuration(''); // Vider le champ personnalisé
+  };
+
+  const handleFrequencyOptionPress = (frequency: number) => {
+    setSelectedFrequency(frequency);
+    setCustomFrequency(''); // Vider le champ personnalisé
+  };
+
   const handleCustomDurationChange = (text: string) => {
+    setCustomDuration(text);
     const value = parseInt(text);
     if (!isNaN(value) && value > 0 && value <= 60) {
       setSelectedDuration(value);
-      setCustomDuration(text);
-    } else {
-      setCustomDuration(text);
     }
   };
 
   const handleCustomFrequencyChange = (text: string) => {
+    setCustomFrequency(text);
     const value = parseInt(text);
     if (!isNaN(value) && value > 0 && value <= 240) {
       setSelectedFrequency(value);
-      setCustomFrequency(text);
-    } else {
-      setCustomFrequency(text);
     }
   };
 
@@ -108,7 +114,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                   styles.option,
                   selectedDuration === duration && styles.selectedOption,
                 ]}
-                onPress={() => setSelectedDuration(duration)}
+                onPress={() => handleDurationOptionPress(duration)}
                 activeOpacity={0.7}
               >
                 <Text
@@ -138,6 +144,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               />
               <Text style={styles.inputUnit}>minutes</Text>
             </View>
+            {customDuration && (
+              <Text style={styles.currentValue}>
+                Durée actuelle : {selectedDuration} minutes
+              </Text>
+            )}
           </View>
         </View>
 
@@ -156,7 +167,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                   styles.option,
                   selectedFrequency === frequency && styles.selectedOption,
                 ]}
-                onPress={() => setSelectedFrequency(frequency)}
+                onPress={() => handleFrequencyOptionPress(frequency)}
                 activeOpacity={0.7}
               >
                 <Text
@@ -186,6 +197,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               />
               <Text style={styles.inputUnit}>minutes</Text>
             </View>
+            {customFrequency && (
+              <Text style={styles.currentValue}>
+                Fréquence actuelle : {selectedFrequency} minutes
+              </Text>
+            )}
           </View>
         </View>
 
@@ -351,6 +367,12 @@ const styles = StyleSheet.create({
   inputUnit: {
     fontSize: 14,
     color: theme.textSecondary,
+  },
+  currentValue: {
+    fontSize: 12,
+    color: theme.primary,
+    marginTop: 4,
+    fontStyle: 'italic',
   },
   errorContainer: {
     backgroundColor: theme.error + '20',

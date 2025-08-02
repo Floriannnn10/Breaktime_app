@@ -5,12 +5,13 @@ import { CaptivationScreen } from './src/screens/CaptivationScreen';
 import { MainTimerScreen } from './src/screens/MainTimerScreen';
 import { SettingsScreen } from './src/screens/SettingsScreen';
 import { getDefaultSettings } from './src/utils/timeUtils';
+import { PauseSettings } from './src/types';
 
 type Screen = 'welcome' | 'captivation' | 'main' | 'settings';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('welcome');
-  const [settings, setSettings] = useState(getDefaultSettings());
+  const [settings, setSettings] = useState<PauseSettings>(getDefaultSettings());
 
   const handleStartExperience = () => {
     setCurrentScreen('captivation');
@@ -29,7 +30,12 @@ export default function App() {
   };
 
   const handleSaveSettings = (newSettings: { duration: number; frequency: number }) => {
-    setSettings(newSettings);
+    setSettings({
+      ...settings,
+      duration: newSettings.duration,
+      frequency: newSettings.frequency,
+    });
+    setCurrentScreen('main');
   };
 
   const renderScreen = () => {
@@ -44,6 +50,7 @@ export default function App() {
         return (
           <MainTimerScreen
             onOpenSettings={handleOpenSettings}
+            settings={settings}
           />
         );
 

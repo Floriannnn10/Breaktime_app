@@ -23,6 +23,25 @@ export const useTimer = (settings?: PauseSettings) => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [progress, setProgress] = useState(0);
 
+  // Réinitialiser le timer quand les paramètres changent
+  useEffect(() => {
+    if (settings) {
+      setTimerState({
+        isRunning: false,
+        timeRemaining: minutesToSeconds(settings.frequency),
+        currentPhase: 'work',
+        totalWorkTime: minutesToSeconds(settings.frequency),
+        totalBreakTime: minutesToSeconds(settings.duration),
+      });
+      
+      // Arrêter le timer en cours si il y en a un
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+  }, [settings?.duration, settings?.frequency]);
+
   // Fonction pour démarrer le timer
   const startTimer = useCallback(async () => {
     if (timerState.isRunning) return;

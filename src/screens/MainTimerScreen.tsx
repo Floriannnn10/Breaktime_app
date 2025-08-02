@@ -18,9 +18,13 @@ const { width } = Dimensions.get('window');
 
 interface MainTimerScreenProps {
   onOpenSettings: () => void;
+  settings?: { duration: number; frequency: number };
 }
 
-export const MainTimerScreen: React.FC<MainTimerScreenProps> = ({ onOpenSettings }) => {
+export const MainTimerScreen: React.FC<MainTimerScreenProps> = ({ 
+  onOpenSettings,
+  settings 
+}) => {
   const {
     timerState,
     progress,
@@ -29,7 +33,7 @@ export const MainTimerScreen: React.FC<MainTimerScreenProps> = ({ onOpenSettings
     stopTimer,
     resetTimer,
     skipPhase,
-  } = useTimer();
+  } = useTimer(settings);
 
   const [showTips, setShowTips] = useState(false);
 
